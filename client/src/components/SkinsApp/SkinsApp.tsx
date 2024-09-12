@@ -14,9 +14,9 @@ import {
   ChakraProvider,
   extendTheme,
 } from '@chakra-ui/react';
-import FilterPanel from './FilterPanel';
-import SkinCard from './SkinCard';
-import Header from './Header';
+import FilterPanel from '../FilterPanel/FilterPanel';
+import SkinCard from '../SkinCard/SkinCard';
+import Header from '../Header/Header';
 
 interface Skin {
   id: string;
