@@ -1,29 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from './Header';
 import {
   Box,
-  Text,
   VStack,
-  HStack,
-  RangeSlider,
-  RangeSliderTrack,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  Select,
-  Button,
-  SimpleGrid,
-  Divider,
-  useTheme,
   Container,
   Heading,
-  Input,
+  SimpleGrid,
+  Skeleton,
+  Text,
   Flex,
   Badge,
-  Skeleton
+  useTheme,
+  ColorModeScript,
+  ChakraProvider,
+  extendTheme,
 } from '@chakra-ui/react';
-import { Search, Sliders } from 'lucide-react';
-
+import FilterPanel from './FilterPanel';
 import SkinCard from './SkinCard';
+import Header from './Header';
 
 interface Skin {
   id: string;
@@ -37,8 +30,27 @@ interface Skin {
 const CATEGORIES = ['Rifle', 'Pistol', 'Knife', 'SMG', 'Shotgun', 'Sniper Rifle'];
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+// Extend the theme to include custom colors, fonts, etc
+const theme = extendTheme({
+  config: {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
+  },
+  colors: {
+    gray: {
+      50: '#f7fafc',
+      // ... other shades
+      900: '#171923',
+    },
+    orange: {
+      50: '#fffaf0',
+      // ... other shades
+      500: '#ed8936',
+    },
+  },
+});
+
 const SkinsApp: React.FC = () => {
-  const theme = useTheme();
   const [skins, setSkins] = useState<Skin[]>([]);
   const [filteredSkins, setFilteredSkins] = useState<Skin[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,29 +86,24 @@ const SkinsApp: React.FC = () => {
   const applyFilters = useCallback(() => {
     let result = skins;
 
-    // Aplicar filtro de búsqueda
     if (searchTerm) {
       result = result.filter(skin => 
         skin.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Aplicar filtro de categoría
     if (category) {
       result = result.filter(skin => skin.category === category);
     }
 
-    // Aplicar filtro de precio
     result = result.filter(skin => 
       skin.price >= priceRange[0] && skin.price <= priceRange[1]
     );
 
-    // Aplicar filtro de float
     result = result.filter(skin => 
       skin.float >= floatRange[0] && skin.float <= floatRange[1]
     );
 
-    // Aplicar ordenamiento
     result.sort((a, b) => {
       if (sortBy === 'price') {
         return a.price - b.price;
@@ -114,145 +121,62 @@ const SkinsApp: React.FC = () => {
   }, [applyFilters]);
 
   return (
-    <Box bg={theme.colors.gray[50]} minH="100vh">
-      <Container maxW="container.xl" py={8}>
-        <VStack spacing={8} align="stretch">
-          <Heading as="h1" size="2xl" textAlign="center" color={theme.colors.orange[300]}>
-            <Header />
-          </Heading>
+    <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <Box bg="black" minH="100vh" color="white">
+        <Container maxW="container.xl" py={8}>
+          <VStack spacing={8} align="stretch">
+            <Heading as="h1" size="2xl" textAlign="center" color="orange.400">
+              <Header />
+            </Heading>
 
-          <Box bg="white" p={6} borderRadius="lg" boxShadow="md">
-            <VStack spacing={6}>
-              <Flex w="100%" gap={4}>
-                <Input
-                  placeholder="Pesquisar skins..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  size="lg"
-                  flex={1}
-                />
-                <Button
-                  leftIcon={<Search />}
-                  onClick={applyFilters}
-                  colorScheme="orange"
-                  size="lg"
-                  px={8}
-                  _hover={{ bg: 'orange.300' }}
-                >
-                  Procurar
-                </Button>
+            <FilterPanel
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              category={category}
+              setCategory={setCategory}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              floatRange={floatRange}
+              setFloatRange={setFloatRange}
+              applyFilters={applyFilters}
+              categories={CATEGORIES}
+            />
+
+            <Box>
+              <Flex justify="space-between" align="center" mb={4}>
+                <Heading as="h2" size="lg" color="orange.300">
+                  Resultados
+                </Heading>
+                <Badge colorScheme="white" fontSize="md" p={2} borderRadius="md">
+                  {filteredSkins.length} itens encontrados
+                </Badge>
               </Flex>
-
-              <Flex w="100%" gap={4} flexWrap={['wrap', 'nowrap']}>
-                <Select
-                  placeholder="Selecione a categoria"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  size="lg"
-                  flex={1}
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
+              
+              {loading ? (
+                <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
+                  {[...Array(4)].map((_, index) => (
+                    <Skeleton key={index} height="300px" borderRadius="lg" />
                   ))}
-                </Select>
-
-                <Select
-                  placeholder="Ordenar por"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  size="lg"
-                  flex={1}
-                >
-                  <option value="price">Preço</option>
-                  <option value="float">Float</option>
-                </Select>
-              </Flex>
-
-              <Box w="100%">
-                <Text fontWeight="semibold" mb={2}>
-                  Faixa de preço: ${priceRange[0]} - ${priceRange[1]}
+                </SimpleGrid>
+              ) : error ? (
+                <Text color="red.400" fontSize="lg" textAlign="center">
+                  Error: {error}
                 </Text>
-                <RangeSlider
-                  min={0}
-                  max={10000}
-                  step={100}
-                  value={priceRange}
-                  onChange={(val: [number, number]) => setPriceRange(val)}
-                  colorScheme="orange"
-                >
-                  <RangeSliderTrack>
-                    <RangeSliderFilledTrack />
-                  </RangeSliderTrack>
-                  <RangeSliderThumb index={0} />
-                  <RangeSliderThumb index={1} />
-                </RangeSlider>
-              </Box>
-
-              <Box w="100%">
-                <Text fontWeight="semibold" mb={2}>
-                  Faixa de Float: {floatRange[0].toFixed(2)} - {floatRange[1].toFixed(2)}
-                </Text>
-                <RangeSlider
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={floatRange}
-                  onChange={(val: [number, number]) => setFloatRange(val)}
-                  colorScheme="orange"
-                >
-                  <RangeSliderTrack>
-                    <RangeSliderFilledTrack />
-                  </RangeSliderTrack>
-                  <RangeSliderThumb index={0} />
-                  <RangeSliderThumb index={1} />
-                </RangeSlider>
-              </Box>
-
-              <Button
-                leftIcon={<Sliders />}
-                onClick={applyFilters}
-                colorScheme="orange"
-                size="lg"
-                width="full"
-              >
-                Aplicar Filtros
-              </Button>
-            </VStack>
-          </Box>
-
-          <Box>
-            <Flex justify="space-between" align="center" mb={4}>
-              <Heading as="h2" size="lg">
-                Resultados
-              </Heading>
-              <Badge colorScheme="orange" fontSize="md" p={2} borderRadius="md">
-                {filteredSkins.length} itens encontrados
-              </Badge>
-            </Flex>
-            
-            {loading ? (
-              <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
-                {[...Array(4)].map((_, index) => (
-                  <Skeleton key={index} height="300px" borderRadius="lg" />
-                ))}
-              </SimpleGrid>
-            ) : error ? (
-              <Text color="red.500" fontSize="lg" textAlign="center">
-                Error: {error}
-              </Text>
-            ) : (
-              <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
-                {filteredSkins.map((skin) => (
-                  <SkinCard key={skin.id} skin={skin} />
-                ))}
-              </SimpleGrid>
-            )}
-          </Box>
-        </VStack>
-      </Container>
-    </Box>
+              ) : (
+                <SimpleGrid columns={[1, 2, 3, 4]} spacing={6}>
+                  {filteredSkins.map((skin) => (
+                    <SkinCard key={skin.id} skin={skin} />
+                  ))}
+                </SimpleGrid>
+              )}
+            </Box>
+          </VStack>
+        </Container>
+      </Box>
+    </ChakraProvider>
   );
 };
 

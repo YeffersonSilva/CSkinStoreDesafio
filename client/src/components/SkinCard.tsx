@@ -38,7 +38,7 @@ const SkinCard: React.FC<SkinCardProps> = ({ skin }) => {
           <Text fontWeight="bold" fontSize="lg" color={textColor}>
             {skin.name}
           </Text>
-          <Badge colorScheme="green" fontSize="sm">
+          <Badge colorScheme="orange" fontSize="sm">
             ${skin.price.toFixed(2)}
           </Badge>
           <Text fontSize="sm" color={textColor}>

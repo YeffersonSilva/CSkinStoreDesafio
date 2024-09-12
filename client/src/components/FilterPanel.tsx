@@ -11,6 +11,7 @@ import {
   Button,
   Flex,
   Box,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { Search, Sliders } from 'lucide-react';
 
@@ -43,8 +44,11 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   applyFilters,
   categories,
 }) => {
+  const bgColor = useColorModeValue('gray.800', 'gray.900');
+  const textColor = useColorModeValue('white', 'gray.100');
+
   return (
-    <VStack spacing={6} align="stretch" bg="white" p={6} borderRadius="lg" boxShadow="md">
+    <VStack spacing={6} align="stretch" bg={bgColor} p={6} borderRadius="lg" boxShadow="xl">
       <Flex gap={4}>
         <Input
           placeholder="Pesquisar skins..."
@@ -52,6 +56,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           size="lg"
           flex={1}
+          bg="gray.700"
+          color={textColor}
+          _placeholder={{ color: 'gray.400' }}
         />
         <Button
           leftIcon={<Search />}
@@ -72,6 +79,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => setCategory(e.target.value)}
           size="lg"
           flex={1}
+          bg="gray.700"
+          color="black"
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -86,6 +95,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(e) => setSortBy(e.target.value)}
           size="lg"
           flex={1}
+          bg="gray.700"
+          color="black"
         >
           <option value="price">Preço</option>
           <option value="float">Float</option>
@@ -93,7 +104,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </Flex>
 
       <Box>
-        <Text fontWeight="semibold" mb={2}>
+        <Text fontWeight="semibold" mb={2} color={textColor}>
           Faixa de preço: ${priceRange[0]} - ${priceRange[1]}
         </Text>
         <RangeSlider
@@ -113,7 +124,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </Box>
 
       <Box>
-        <Text fontWeight="semibold" mb={2}>
+        <Text fontWeight="semibold" mb={2} color={textColor}>
           Faixa de Float: {floatRange[0].toFixed(2)} - {floatRange[1].toFixed(2)}
         </Text>
         <RangeSlider
