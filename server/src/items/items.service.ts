@@ -18,11 +18,16 @@ export class ItemsService {
       order,
     } = getItemsDto;
 
-    // Asegúrate de que 'mode' sea interpretado correctamente como QueryMode
     const where = {
       ...(name && { name: { contains: name, mode: 'insensitive' as const } }),
-      ...(minFloat && maxFloat && { float: { gte: minFloat, lte: maxFloat } }),
-      ...(minPrice && maxPrice && { price: { gte: minPrice, lte: maxPrice } }),
+      ...(minFloat !== undefined &&
+        maxFloat !== undefined && {
+          float: { gte: Number(minFloat), lte: Number(maxFloat) },
+        }),
+      ...(minPrice !== undefined &&
+        maxPrice !== undefined && {
+          price: { gte: Number(minPrice), lte: Number(maxPrice) },
+        }),
       ...(category && { category }),
     };
 
