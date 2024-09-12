@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ItemsModule } from './items/items.module'; // Importa los módulos que necesites
+import { ItemsModule } from './items/items.module';
 
 @Module({
-  imports: [ItemsModule], // Agrega aquí tus módulos
-  controllers: [], // Si tienes controladores
-  providers: [], // Si tienes servicios
+  imports: [ItemsModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

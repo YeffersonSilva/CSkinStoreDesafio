@@ -1,8 +1,8 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react'
 
 const config: ThemeConfig = {
-  initialColorMode: 'light', // O 'dark', según prefieras
-  useSystemColorMode: false, // Deshabilita el uso del modo de color del sistema
+  initialColorMode: 'light', 
+  useSystemColorMode: false, 
 }
 
 const theme = extendTheme({
@@ -10,8 +10,8 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: '#1a1a1a', // Fondo gris oscuro
-       // color: 'white',
+        bg: '#1a1a1a', 
+     
       },
     },
   },

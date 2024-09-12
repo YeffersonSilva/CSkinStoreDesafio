@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import Link from 'next/link'; // Importa Link de next/link
+import Link from 'next/link';
 
 const Header: React.FC = () => {
   return (
-    <Box bg="black" py={4}> {/* Cambia el fondo a negro */}
+    <Box bg="black" py={4}> {}
       <Flex as="header" align="center" justify="center" maxW="container.xl" mx="auto" px={4}>
         <Link href="/" passHref>
           <Image 

@@ -50,8 +50,8 @@ describe('ItemsController (Integration)', () => {
 
       const mockGetItemsDto: GetItemsDto = {
         name: 'Test Item',
-        minPrice: 10, // Cambiado a número
-        maxPrice: 100, // Cambiado a número
+        minPrice: 10,
+        maxPrice: 100,
       };
 
       expect(await controller.getItems(mockGetItemsDto)).toBe(result);
