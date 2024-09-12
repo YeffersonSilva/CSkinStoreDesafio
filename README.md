@@ -2,9 +2,13 @@
 
 Bem-vindo ao CSkinStoreDesafio! Este projeto é uma aplicação full-stack para listar e filtrar skins de CS:GO, utilizando Nest.js com Prisma e MongoDB no back-end e Next.js no front-end.
 
+
+
 ## Descrição
 
 O CSkinStoreDesafio é uma aplicação que permite aos usuários visualizar, filtrar e ordenar skins de CS:GO. A aplicação foi desenvolvida com foco em uma arquitetura moderna e eficiente, utilizando as melhores práticas e ferramentas disponíveis.
+
+![Título primario](https://github.com/user-attachments/assets/c4cb9ba2-2cf8-4c3b-90a1-d6bb786daaee)
 
 ## Tecnologias Utilizadas
 
@@ -151,6 +155,10 @@ Contribuições são bem-vindas! Se você quiser contribuir para o projeto, siga
 3. Faça as suas alterações e commit (`git commit -am 'Adiciona nova feature'`).
 4. Envie a branch (`git push origin feature/nova-feature`).
 5. Abra um pull request.
+
+## Vídeo do projeto funcionando
+   ![Grabación-2024-09-12-193025](https://github.com/user-attachments/assets/77a503cf-330f-4c0d-9a54-917356deaaef)
+
 
 ## Licença
 
